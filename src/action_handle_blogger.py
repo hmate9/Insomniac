@@ -7,6 +7,8 @@ from src.navigation import navigate, Tabs
 from src.storage import FollowingStatus
 from src.utils import *
 
+import random
+
 
 def handle_blogger(device,
                    username,
@@ -34,7 +36,8 @@ def handle_blogger(device,
         return
     if is_myself:
         _scroll_to_bottom(device)
-    _iterate_over_followers(device, interaction, is_follow_limit_reached, storage, on_interaction, is_myself)
+    _iterate_over_followers(
+        device, interaction, is_follow_limit_reached, storage, on_interaction, is_myself)
 
 
 def _open_user_followers(device, username):
@@ -56,7 +59,8 @@ def _open_user_followers(device, username):
                                text=username)
 
         if not username_view.exists:
-            print_timeless(COLOR_FAIL + "Cannot find user @" + username + ", abort." + COLOR_ENDC)
+            print_timeless(COLOR_FAIL + "Cannot find user @" +
+                           username + ", abort." + COLOR_ENDC)
             return False
 
         username_view.click.wait()
@@ -109,7 +113,8 @@ def _iterate_over_followers(device, interaction, is_follow_limit_reached, storag
                 user_info_view = item.child(index=1)
                 user_name_view = user_info_view.child(index=0).child()
                 if not user_name_view.exists:
-                    print(COLOR_OKGREEN + "Next item not found: probably reached end of the screen." + COLOR_ENDC)
+                    print(
+                        COLOR_OKGREEN + "Next item not found: probably reached end of the screen." + COLOR_ENDC)
                     break
 
                 username = user_name_view.text
@@ -118,7 +123,8 @@ def _iterate_over_followers(device, interaction, is_follow_limit_reached, storag
                 if not is_myself and storage.check_user_was_interacted(username):
                     print("@" + username + ": already interacted. Skip.")
                 elif is_myself and storage.check_user_was_interacted_recently(username):
-                    print("@" + username + ": already interacted in the last week. Skip.")
+                    print("@" + username +
+                          ": already interacted in the last week. Skip.")
                 else:
                     print("@" + username + ": interact")
                     user_name_view.click.wait()
@@ -127,7 +133,8 @@ def _iterate_over_followers(device, interaction, is_follow_limit_reached, storag
                         and not is_follow_limit_reached() \
                         and storage.get_following_status(username) == FollowingStatus.NONE
 
-                    interaction_succeed, followed = interaction(device, username=username, can_follow=can_follow)
+                    interaction_succeed, followed = interaction(
+                        device, username=username, can_follow=can_follow)
                     storage.add_interacted_user(username, followed=followed)
                     can_continue = on_interaction(succeed=interaction_succeed,
                                                   followed=followed)
@@ -138,7 +145,8 @@ def _iterate_over_followers(device, interaction, is_follow_limit_reached, storag
                     print("Back to followers list")
                     device.press.back()
         except IndexError:
-            print(COLOR_FAIL + "Cannot get next item: probably reached end of the screen." + COLOR_ENDC)
+            print(
+                COLOR_FAIL + "Cannot get next item: probably reached end of the screen." + COLOR_ENDC)
 
         if is_myself and scrolled_to_top():
             print(COLOR_OKGREEN + "Scrolled to top, finish." + COLOR_ENDC)
@@ -180,7 +188,8 @@ def _interact_with_user(device,
         print(COLOR_FAIL + "Max number of likes per user is 12" + COLOR_ENDC)
         likes_count = 12
 
-    coordinator_layout = device(resourceId='com.instagram.android:id/coordinator_root_layout')
+    coordinator_layout = device(
+        resourceId='com.instagram.android:id/coordinator_root_layout')
     if coordinator_layout.exists:
         print("Scroll down to see more photos.")
         coordinator_layout.scroll()
@@ -198,14 +207,16 @@ def _interact_with_user(device,
     shuffle(photos_indices)
     photos_indices = photos_indices[:likes_count]
     photos_indices = sorted(photos_indices)
-    for i in range(0, likes_count):
+    for i in range(0, random.randint(1, likes_count)):
         photo_index = photos_indices[i]
         row = photo_index // 3
         column = photo_index - row * 3
 
-        print("Open and like photo #" + str(i + 1) + " (" + str(row + 1) + " row, " + str(column + 1) + " column)")
+        print("Open and like photo #" + str(i + 1) +
+              " (" + str(row + 1) + " row, " + str(column + 1) + " column)")
         if not _open_photo_and_like(device, row, column, on_like):
-            print(COLOR_OKGREEN + "Less than " + str(number_of_rows_to_use * 3) + " photos." + COLOR_ENDC)
+            print(COLOR_OKGREEN + "Less than " +
+                  str(number_of_rows_to_use * 3) + " photos." + COLOR_ENDC)
             if can_follow and profile_filter.can_follow_private_or_empty():
                 followed = _follow(device,
                                    username,
@@ -284,7 +295,8 @@ def _follow(device, username, follow_percentage):
         return False
 
     print("Following...")
-    coordinator_layout = device(resourceId='com.instagram.android:id/coordinator_root_layout')
+    coordinator_layout = device(
+        resourceId='com.instagram.android:id/coordinator_root_layout')
     if coordinator_layout.exists:
         coordinator_layout.scroll.toBeginning()
 
@@ -304,7 +316,8 @@ def _follow(device, username, follow_percentage):
         random_sleep()
         return True
     else:
-        print_timeless(COLOR_FAIL + "Failed @" + username + " following." + COLOR_ENDC)
+        print_timeless(COLOR_FAIL + "Failed @" +
+                       username + " following." + COLOR_ENDC)
         return False
 
 

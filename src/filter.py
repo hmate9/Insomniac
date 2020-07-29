@@ -40,10 +40,12 @@ class Filter:
         if field_skip_business is not None or field_skip_non_business is not None:
             has_business_category = self._has_business_category(device)
             if field_skip_business and has_business_category is True:
-                print(COLOR_OKGREEN + "@" + username + " has business account, skip." + COLOR_ENDC)
+                print(COLOR_OKGREEN + "@" + username +
+                      " has business account, skip." + COLOR_ENDC)
                 return False
             if field_skip_non_business and has_business_category is False:
-                print(COLOR_OKGREEN + "@" + username + " has non business account, skip." + COLOR_ENDC)
+                print(COLOR_OKGREEN + "@" + username +
+                      " has non business account, skip." + COLOR_ENDC)
                 return False
 
         if field_min_followers is not None or field_max_followers is not None \
@@ -67,7 +69,7 @@ class Filter:
                       " followings, skip." + COLOR_ENDC)
                 return False
             if field_min_potency_ratio is not None \
-                    and (int(followings) == 0 or followers / followings < float(field_min_potency_ratio)):
+                    and (int(followers) == 0 or followings / followers < float(field_min_potency_ratio)):
                 print(COLOR_OKGREEN + "@" + username + "'s potency ratio is less than " +
                       str(field_min_potency_ratio) + ", skip." + COLOR_ENDC)
                 return False
@@ -77,7 +79,8 @@ class Filter:
         if self.conditions is None:
             return False
 
-        field_follow_private_or_empty = self.conditions.get(FIELD_FOLLOW_PRIVATE_OR_EMPTY)
+        field_follow_private_or_empty = self.conditions.get(
+            FIELD_FOLLOW_PRIVATE_OR_EMPTY)
         return field_follow_private_or_empty is not None and bool(field_follow_private_or_empty)
 
     @staticmethod
@@ -93,7 +96,8 @@ class Filter:
                 print_timeless(COLOR_FAIL + "Cannot get followers count text, default is " + str(followers) +
                                COLOR_ENDC)
         else:
-            print_timeless(COLOR_FAIL + "Cannot find followers count view, default is " + str(followers) + COLOR_ENDC)
+            print_timeless(
+                COLOR_FAIL + "Cannot find followers count view, default is " + str(followers) + COLOR_ENDC)
 
         followings = 0
         followings_text_view = device(resourceId='com.instagram.android:id/row_profile_header_textview_following_count',
@@ -106,7 +110,8 @@ class Filter:
                 print_timeless(COLOR_FAIL + "Cannot get followings count text, default is " + str(followings) +
                                COLOR_ENDC)
         else:
-            print_timeless(COLOR_FAIL + "Cannot find followings count view, default is " + str(followings) + COLOR_ENDC)
+            print_timeless(
+                COLOR_FAIL + "Cannot find followings count view, default is " + str(followings) + COLOR_ENDC)
 
         return followers, followings
 

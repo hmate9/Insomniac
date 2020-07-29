@@ -19,7 +19,8 @@ def get_version():
     stream = os.popen('git describe --tags')
     output = stream.read()
     version_match = re.match('(v\\d+.\\d+.\\d+)', output)
-    version = (version_match is None) and "(Work In Progress)" or version_match.group(1)
+    version = (
+        version_match is None) and "(Work In Progress)" or version_match.group(1)
     stream.close()
     return version
 
@@ -52,20 +53,24 @@ def double_click(device, *args, **kwargs):
     device(*args, **kwargs).click()
     config['actionAcknowledgmentTimeout'] = 3000
     device.server.jsonrpc.setConfigurator(config)
-    
-    
+
+
 def random_sleep():
     delay = randint(1, 4)
+    delay = delay * 0.1
     print("Sleep for " + str(delay) + (delay == 1 and " second" or " seconds"))
     sleep(delay)
 
+
 def turning_on_device_screen():
-    status=os.popen ("adb shell dumpsys input_method | grep mInteractive= | cut -f3 -d'='")
+    status = os.popen(
+        "adb shell dumpsys input_method | grep mInteractive= | cut -f3 -d'='")
     value = status.read()
     if value[0:5] == "false":
         print("Turning on the screen")
         os.popen("adb shell input keyevent 26")
-    
+
+
 def open_instagram(device_id):
     turning_on_device_screen()
     print("Open Instagram app")
@@ -80,6 +85,7 @@ def close_instagram(device_id):
              " shell am force-stop com.instagram.android").close()
     print("Turning off screen")
     os.popen("adb shell input keyevent 26")
+
 
 def stringify_interactions(interactions):
     if len(interactions) == 0:
@@ -108,9 +114,12 @@ def print_copyright(username):
     if hashlib.sha1(username.encode('utf-8')).hexdigest() not in copyright_blacklist:
         print_timeless("\nIf you like this script and want it to be improved, " + COLOR_BOLD + "donate please"
                        + COLOR_ENDC + ".")
-        print_timeless(COLOR_BOLD + "$1" + COLOR_ENDC + " - support this project")
-        print_timeless(COLOR_BOLD + "$5" + COLOR_ENDC + " - unblock hidden features")
-        print_timeless(COLOR_BOLD + "$50" + COLOR_ENDC + " - order the feature you want")
+        print_timeless(COLOR_BOLD + "$1" + COLOR_ENDC +
+                       " - support this project")
+        print_timeless(COLOR_BOLD + "$5" + COLOR_ENDC +
+                       " - unblock hidden features")
+        print_timeless(COLOR_BOLD + "$50" + COLOR_ENDC +
+                       " - order the feature you want")
         print_timeless("https://www.patreon.com/insomniac_bot\n")
 
 
