@@ -1,8 +1,8 @@
 {
-"min_followers": 10,
-"max_followers": 100,
-"min_followings": 100,
-"max_followings": 1000,
-"min_potency_ratio": 5
+    "min_followers": 10,
+    "max_followers": 1000,
+    "min_followings": 100,
+    "max_followings": 1000,
+    "min_potency_ratio": 2
 }
 
